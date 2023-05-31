@@ -1,6 +1,5 @@
 import express from "express";
 import { UserModel } from "../models/user.model.js";
-// import generateUserData from "../utils/helper.js";
 import { tokenService } from "../services/token.services.js";
 import bcrypt from "bcryptjs";
 import { check, validationResult } from "express-validator";
@@ -34,7 +33,6 @@ router.post(
       }
       const hashedPassword = await bcrypt.hash(password, 12);
       const newUser = await UserModel.create({
-        // ...generateUserData(),
         ...req.body,
         password: hashedPassword,
       });
