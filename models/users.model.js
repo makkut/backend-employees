@@ -2,9 +2,6 @@ import { Schema, model } from "mongoose";
 
 const schema = new Schema(
   {
-    name: {
-      type: String,
-    },
     email: {
       type: String,
       required: true,
@@ -12,9 +9,13 @@ const schema = new Schema(
     },
     password: {
       type: String,
+      required: true,
     },
+    isActivated: { type: Boolean, default: false },
+    activationLink: { type: String },
   },
   { timestamps: true }
 );
 
-export const UserModel = model("User", schema);
+const UsersModel = model("Users", schema);
+export default UsersModel;

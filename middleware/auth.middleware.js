@@ -1,23 +1,23 @@
-import { tokenService } from "../services/token.services.js";
+import { ApiError } from "../exeptions/api.error.js";
+import tokenService from "../services/tokens.service.js";
 
-const users = (req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return next();
-  }
-
+export default function (req, res, next) {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+      return next(ApiError.UnauthorizedError());
     }
-
-    const data = tokenService.validateAccess(token);
-    req.user = data;
-
+    const accessToken = authorizationHeader.split(" ")[1];
+    if (!accessToken) {
+      return next(ApiError.UnauthorizedError());
+    }
+    const userData = tokenService.validateAccessToken(accessToken);
+    if (!userData) {
+      return next(ApiError.UnauthorizedError());
+    }
+    req.user = userData;
     next();
-  } catch (e) {
-    return res.status(401).json({ message: "Unauthorized" });
+  } catch (error) {
+    return next(ApiError.UnauthorizedError());
   }
-};
-
-export default users;
+}

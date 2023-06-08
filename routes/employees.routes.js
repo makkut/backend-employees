@@ -1,10 +1,10 @@
 import express from "express";
 import { EmployeesModel } from "../models/employees.model.js";
-import auth from "../middleware/auth.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const list = await EmployeesModel.find();
     res.status(200).send(list);
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const employee = await EmployeesModel.findById(id);
@@ -29,7 +29,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const employee = new EmployeesModel(req.body);
     await employee.save();
@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     try {
@@ -63,7 +63,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     try {
